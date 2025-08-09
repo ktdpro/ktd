@@ -19,7 +19,11 @@ type StepId =
 
 type Choice = { value: string; cost?: number; text: string };
 
-const Section: React.FC<{ id?: string; className?: string; children: React.ReactNode }> = ({ id, className = '', children }) => {
+const Section: React.FC<{ id?: string; className?: string; children: React.ReactNode }> = ({
+  id,
+  className = '',
+  children,
+}) => {
   const ref = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -54,12 +58,12 @@ const Section: React.FC<{ id?: string; className?: string; children: React.React
   );
 };
 
-export default function QuoteCalculator() {
+export default function QuoteForm() {
   const [currentStep, setCurrentStep] = useState<StepId>('step-1');
   const [selections, setSelections] = useState<Record<string, any>>({
     'step-1': null,
     'step-new-2': null,
-    'step-redesign-2': { url: '' }, // track URL in state, not the DOM
+    'step-redesign-2': { url: '' },
     'step-redesign-3': [] as Choice[],
     'step-other-2': null,
     'step-other-seo': null,
@@ -79,11 +83,11 @@ export default function QuoteCalculator() {
     const seq: StepId[] = ['step-1'];
     if (type === 'new') {
       seq.push('step-new-2', 'step-features');
-      if ((selections['step-features'] as Choice[] | null)?.some?.(f => f.value === 'ecommerce')) seq.push('step-ecomm');
+      if ((selections['step-features'] as Choice[] | null)?.some?.((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
       seq.push('step-lead-capture', 'step-estimate', 'step-timeline', 'step-final');
     } else if (type === 'redesign') {
       seq.push('step-redesign-2', 'step-redesign-3', 'step-features');
-      if ((selections['step-features'] as Choice[] | null)?.some?.(f => f.value === 'ecommerce')) seq.push('step-ecomm');
+      if ((selections['step-features'] as Choice[] | null)?.some?.((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
       seq.push('step-lead-capture', 'step-estimate', 'step-timeline', 'step-final');
     } else if (type === 'other') {
       seq.push('step-other-2');
@@ -121,12 +125,12 @@ export default function QuoteCalculator() {
   };
 
   const pick = (step: StepId, choice: Choice, options?: { checkbox?: boolean }) => {
-    setSelections(prev => {
+    setSelections((prev) => {
       const next = { ...prev };
       if (options?.checkbox) {
         const arr: Choice[] = Array.isArray(next[step]) ? next[step] : [];
-        const exists = arr.some(x => x.value === choice.value);
-        next[step] = exists ? arr.filter(x => x.value !== choice.value) : [...arr, choice];
+        const exists = arr.some((x) => x.value === choice.value);
+        next[step] = exists ? arr.filter((x) => x.value !== choice.value) : [...arr, choice];
         if (step === 'step-features' && choice.value === 'ecommerce' && exists) {
           next['step-ecomm'] = null;
         }
@@ -143,7 +147,7 @@ export default function QuoteCalculator() {
     const name = String(fd.get('name') || '');
     const email = String(fd.get('email') || '');
     if (name && email) {
-      setSelections(prev => ({ ...prev, lead: { name, email } }));
+      setSelections((prev) => ({ ...prev, lead: { name, email } }));
       go(1);
     }
   };
@@ -152,27 +156,11 @@ export default function QuoteCalculator() {
     const s = selections;
     let total = 0;
     if (s['step-1']?.value === 'new') total += s['step-new-2']?.cost || 0;
-    if (s['step-1']?.value === 'redesign') (s['step-redesign-3'] as Choice[]).forEach(f => (total += f.cost || 0));
-    (s['step-features'] as Choice[])?.forEach?.(f => (total += f.cost || 0));
+    if (s['step-1']?.value === 'redesign') (s['step-redesign-3'] as Choice[]).forEach((f) => (total += f.cost || 0));
+    (s['step-features'] as Choice[])?.forEach?.((f) => (total += f.cost || 0));
     if (s['step-ecomm']?.cost) total += s['step-ecomm'].cost;
     const max = Math.round(total * 1.35);
     return { min: total, max };
-  };
-
-  const summaryList = () => {
-    const s = selections;
-    const out: string[] = [];
-    if (s['step-1']) out.push(`Project Type: ${s['step-1'].text}`);
-    if (s['step-new-2']) out.push(`Pages: ${s['step-new-2'].text}`);
-    if ((s['step-redesign-3'] as Choice[])?.length) out.push(`Goals: ${(s['step-redesign-3'] as Choice[]).map(g => g.text).join(', ')}`);
-    if (s['step-other-2']) out.push(`Inquiry: ${s['step-other-2'].text}`);
-    if (s['step-other-seo']) out.push(`SEO Goal: ${s['step-other-seo'].text}`);
-    if (s['step-other-ads']) out.push(`Ad Budget: ${s['step-other-ads'].text}`);
-    if (s['step-other-ai']) out.push(`AI Goal: ${s['step-other-ai'].text}`);
-    if ((s['step-features'] as Choice[])?.length) out.push(`Features: ${(s['step-features'] as Choice[]).map(f => f.text).join(', ')}`);
-    if (s['step-ecomm']) out.push(`Products: ${s['step-ecomm'].text}`);
-    if (s['step-timeline']) out.push(`Start Date: ${s['step-timeline'].text}`);
-    return out;
   };
 
   const getExplanation = async () => {
@@ -180,7 +168,10 @@ export default function QuoteCalculator() {
     setExplanation('');
     try {
       const { min, max } = estimateRange();
-      const summary = summaryList().join('; ');
+      const summary = Object.values(selections)
+        .filter(Boolean)
+        .map((val) => (typeof val === 'object' && 'text' in val ? val.text : ''))
+        .join('; ');
       const res = await fetch('/api/quote/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -188,20 +179,19 @@ export default function QuoteCalculator() {
       });
       if (!res.ok) throw new Error('Explain API failed');
       const data = await res.json();
-      setExplanation(data.text || "This estimate reflects the scope and the value these features deliver.");
-    } catch (err) {
-      setExplanation("There was an issue generating the explanation, but the range reflects complexity and value.");
+      setExplanation(data.text || 'This estimate reflects the scope and the value these features deliver.');
+    } catch {
+      setExplanation('There was an issue generating the explanation, but the range reflects complexity and value.');
     } finally {
       setExplaining(false);
     }
   };
 
-  // Progress
   const seq = stepSequence();
   const progressPct = ((seq.indexOf(currentStep) + 1) / Math.max(seq.length, 1)) * 100;
 
   return (
-    <Section id="contact" className="bg-brand-blue-600/10">
+    <Section id="quote" className="bg-brand-blue-600/10">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white">Get an Instant Estimate</h2>
@@ -210,13 +200,13 @@ export default function QuoteCalculator() {
           </p>
         </div>
 
-        <div id="quote-calculator" className="max-w-2xl mx-auto bg-light-bg border border-gray-700 p-6 md:p-8 rounded-xl shadow-2xl">
+        <div className="max-w-2xl mx-auto bg-light-bg border border-gray-700 p-6 md:p-8 rounded-xl shadow-2xl">
           {/* Progress bar */}
           <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
             <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
           </div>
 
-          {/* STEP RENDERING SKELETON — replace with your real steps/controls */}
+          {/* Example step: project type */}
           {currentStep === 'step-1' && (
             <div className="space-y-4">
               <p className="text-gray-300">What type of project is this?</p>
@@ -225,13 +215,12 @@ export default function QuoteCalculator() {
                   { value: 'new', text: 'New Website', cost: 1200 },
                   { value: 'redesign', text: 'Redesign', cost: 800 },
                   { value: 'other', text: 'Other / Help', cost: 0 },
-                ].map(opt => (
+                ].map((opt) => (
                   <button
                     key={opt.value}
                     type="button"
                     onClick={() => {
                       pick('step-1', opt);
-                      // slight delay to show active state before nav
                       setTimeout(() => go(1), 150);
                     }}
                     className={[
@@ -246,18 +235,7 @@ export default function QuoteCalculator() {
             </div>
           )}
 
-          {currentStep === 'step-redesign-2' && (
-            <div className="space-y-4">
-              <label className="block text-sm text-gray-300">What’s your current site URL?</label>
-              <input
-                className="form-input w-full rounded-md px-3 py-2"
-                placeholder="https://example.com"
-                value={selections['step-redesign-2']?.url || ''}
-                onChange={e => setSelections(prev => ({ ...prev, 'step-redesign-2': { url: e.target.value } }))}
-              />
-            </div>
-          )}
-
+          {/* Lead capture step */}
           {currentStep === 'step-lead-capture' && (
             <form onSubmit={submitLead} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
@@ -274,6 +252,7 @@ export default function QuoteCalculator() {
             </form>
           )}
 
+          {/* Estimate step */}
           {currentStep === 'step-estimate' && (
             <div className="space-y-4">
               <h3 className="text-white font-semibold">Estimated Range</h3>
@@ -302,7 +281,7 @@ export default function QuoteCalculator() {
               type="button"
               onClick={() => go(-1)}
               className="text-sm text-gray-400 hover:text-white"
-              disabled={stepSequence().indexOf(currentStep) <= 0}
+              disabled={seq.indexOf(currentStep) <= 0}
             >
               Back
             </button>
@@ -310,7 +289,7 @@ export default function QuoteCalculator() {
               type="button"
               onClick={() => go(1)}
               className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
-              disabled={!isStepComplete(currentStep) || stepSequence().indexOf(currentStep) >= stepSequence().length - 1}
+              disabled={!isStepComplete(currentStep) || seq.indexOf(currentStep) >= seq.length - 1}
             >
               Next
             </button>
