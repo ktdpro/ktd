@@ -13,7 +13,7 @@ export default function WebsiteQuotePage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <section className="pt-32 pb-20">
           <div className="mx-auto max-w-6xl px-6">
             <h1 className="text-4xl font-extrabold text-white mb-4">Get a Website Quote</h1>

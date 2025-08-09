@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         {/* Intro */}
         <section className="pt-32 pb-14">
           <div className="mx-auto max-w-6xl px-6">
