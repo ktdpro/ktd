@@ -100,26 +100,24 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-white mb-8">Professional Education & Training</h2>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <article className="rounded-lg border border-gray-700 bg-card-bg p-5">
-                <div className="text-sm uppercase tracking-widest text-gray-400/80 mb-1">
-                  Sessions College for Professional Design
-                </div>
-                <h3 className="text-white font-semibold mb-1">A.A. Web Design (2013–2015)</h3>
-                <p className="text-gray-300 text-sm">
-                  Project‑based, industry‑relevant design education focused on real‑world outcomes.
-                </p>
-              </article>
-
-              <article className="rounded-lg border border-gray-700 bg-card-bg p-5">
+                 <article className="rounded-lg border border-gray-700 bg-card-bg p-5">
                 <div className="text-sm uppercase tracking-widest text-gray-400/80 mb-1">eClasses.org</div>
                 <h3 className="text-white font-semibold mb-1">Web Business & Web Technologies (2010–2012)</h3>
                 <p className="text-gray-300 text-sm">
                   Instructor‑led courses in web design, programming, IT, and business fundamentals.
                 </p>
               </article>
-
               <article className="rounded-lg border border-gray-700 bg-card-bg p-5">
-                <div className="text-sm uppercase tracking-widest text-gray-400/80 mb-1">SearchEngineNews.com</div>
+                <div className="text-sm uppercase tracking-widest text-gray-400/80 mb-1">
+                  Sessions College
+                </div>
+                <h3 className="text-white font-semibold mb-1">A.O.S. in Web Design - Tempe, Arizona (2013–2015)</h3>
+                <p className="text-gray-300 text-sm">
+                  Project‑based, industry‑relevant design education focused on real‑world outcomes.
+                </p>
+              </article>
+              <article className="rounded-lg border border-gray-700 bg-card-bg p-5">
+                <div className="text-sm uppercase tracking-widest text-gray-400/80 mb-1">Search Engine News</div>
                 <h3 className="text-white font-semibold mb-1">Local Search, Advanced SEO & Analytics (2015–2016)</h3>
                 <p className="text-gray-300 text-sm">
                   Practical SEO training geared toward measurable improvements and clear reporting.

@@ -18,6 +18,25 @@ type StepId =
   | 'step-final';
 
 type Choice = { value: string; cost?: number; text: string };
+type Lead = { name: string; email: string };
+
+/** Concrete shape (no conditional mapped types) */
+type Selections = {
+  'step-1': Choice | null;
+  'step-new-2': Choice | null;
+  'step-redesign-2': { url: string };
+  'step-redesign-3': Choice[];
+  'step-other-2': Choice | null;
+  'step-other-seo': Choice | null;
+  'step-other-ads': Choice | null;
+  'step-other-ai': Choice | null;
+  'step-features': Choice[];
+  'step-ecomm': Choice | null;
+  'step-timeline': Choice | null;
+  'step-lead-capture': Lead | null;
+  'step-estimate': null;
+  'step-final': null;
+};
 
 const Section: React.FC<{ id?: string; className?: string; children: React.ReactNode }> = ({
   id,
@@ -46,7 +65,7 @@ const Section: React.FC<{ id?: string; className?: string; children: React.React
   return (
     <section
       id={id}
-      ref={ref as any}
+      ref={ref}
       className={[
         'py-20 lg:py-28 transition-opacity transition-transform duration-700 ease-out will-change-transform',
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5',
@@ -60,19 +79,22 @@ const Section: React.FC<{ id?: string; className?: string; children: React.React
 
 export default function QuoteForm() {
   const [currentStep, setCurrentStep] = useState<StepId>('step-1');
-  const [selections, setSelections] = useState<Record<string, any>>({
+
+  const [selections, setSelections] = useState<Selections>({
     'step-1': null,
     'step-new-2': null,
     'step-redesign-2': { url: '' },
-    'step-redesign-3': [] as Choice[],
+    'step-redesign-3': [],
     'step-other-2': null,
     'step-other-seo': null,
     'step-other-ads': null,
     'step-other-ai': null,
-    'step-features': [] as Choice[],
+    'step-features': [],
     'step-ecomm': null,
     'step-timeline': null,
-    lead: null,
+    'step-lead-capture': null,
+    'step-estimate': null,
+    'step-final': null,
   });
 
   const [explanation, setExplanation] = useState('');
@@ -83,11 +105,11 @@ export default function QuoteForm() {
     const seq: StepId[] = ['step-1'];
     if (type === 'new') {
       seq.push('step-new-2', 'step-features');
-      if ((selections['step-features'] as Choice[] | null)?.some?.((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
+      if ((selections['step-features'] as Choice[]).some((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
       seq.push('step-lead-capture', 'step-estimate', 'step-timeline', 'step-final');
     } else if (type === 'redesign') {
       seq.push('step-redesign-2', 'step-redesign-3', 'step-features');
-      if ((selections['step-features'] as Choice[] | null)?.some?.((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
+      if ((selections['step-features'] as Choice[]).some((f) => f.value === 'ecommerce')) seq.push('step-ecomm');
       seq.push('step-lead-capture', 'step-estimate', 'step-timeline', 'step-final');
     } else if (type === 'other') {
       seq.push('step-other-2');
@@ -103,15 +125,15 @@ export default function QuoteForm() {
   const isStepComplete = (step: StepId) => {
     if (step === 'step-1') return !!selections['step-1'];
     if (step === 'step-new-2') return !!selections['step-new-2'];
-    if (step === 'step-redesign-2') return Boolean(selections['step-redesign-2']?.url?.trim());
-    if (step === 'step-redesign-3') return (selections['step-redesign-3'] as Choice[]).length > 0;
+    if (step === 'step-redesign-2') return Boolean(selections['step-redesign-2']?.url.trim());
+    if (step === 'step-redesign-3') return selections['step-redesign-3'].length > 0;
     if (step === 'step-other-2') return !!selections['step-other-2'];
     if (step === 'step-other-seo') return !!selections['step-other-seo'];
     if (step === 'step-other-ads') return !!selections['step-other-ads'];
     if (step === 'step-other-ai') return !!selections['step-other-ai'];
     if (step === 'step-ecomm') return !!selections['step-ecomm'];
     if (step === 'step-timeline') return !!selections['step-timeline'];
-    if (step === 'step-lead-capture') return !!selections.lead?.name && !!selections.lead?.email;
+    if (step === 'step-lead-capture') return !!selections['step-lead-capture']?.name && !!selections['step-lead-capture']?.email;
     return true;
   };
 
@@ -124,19 +146,47 @@ export default function QuoteForm() {
     }
   };
 
+  // steps that are multi-select vs single-select
+  const MULTI_STEPS = new Set<StepId>(['step-features', 'step-redesign-3']);
+  const SINGLE_STEPS = new Set<StepId>([
+    'step-1',
+    'step-new-2',
+    'step-other-2',
+    'step-other-seo',
+    'step-other-ads',
+    'step-other-ai',
+    'step-ecomm',
+    'step-timeline',
+  ]);
+
   const pick = (step: StepId, choice: Choice, options?: { checkbox?: boolean }) => {
     setSelections((prev) => {
-      const next = { ...prev };
-      if (options?.checkbox) {
-        const arr: Choice[] = Array.isArray(next[step]) ? next[step] : [];
-        const exists = arr.some((x) => x.value === choice.value);
-        next[step] = exists ? arr.filter((x) => x.value !== choice.value) : [...arr, choice];
-        if (step === 'step-features' && choice.value === 'ecommerce' && exists) {
+      const next: Selections = { ...prev };
+
+      if (options?.checkbox && MULTI_STEPS.has(step)) {
+        const key = step as 'step-features' | 'step-redesign-3';
+        const current = next[key];
+        const exists = current.some((x) => x.value === choice.value);
+        const updated = exists ? current.filter((x) => x.value !== choice.value) : [...current, choice];
+        next[key] = updated;
+
+        if (key === 'step-features' && choice.value === 'ecommerce' && exists) {
           next['step-ecomm'] = null;
         }
-      } else {
-        next[step] = choice;
+      } else if (SINGLE_STEPS.has(step)) {
+        const key =
+          step as
+            | 'step-1'
+            | 'step-new-2'
+            | 'step-other-2'
+            | 'step-other-seo'
+            | 'step-other-ads'
+            | 'step-other-ai'
+            | 'step-ecomm'
+            | 'step-timeline';
+        next[key] = choice;
       }
+      // ignore other steps (like step-redesign-2 URL, lead capture, etc.) — they have their own handlers
       return next;
     });
   };
@@ -147,7 +197,7 @@ export default function QuoteForm() {
     const name = String(fd.get('name') || '');
     const email = String(fd.get('email') || '');
     if (name && email) {
-      setSelections((prev) => ({ ...prev, lead: { name, email } }));
+      setSelections((prev) => ({ ...prev, 'step-lead-capture': { name, email } }));
       go(1);
     }
   };
@@ -156,8 +206,8 @@ export default function QuoteForm() {
     const s = selections;
     let total = 0;
     if (s['step-1']?.value === 'new') total += s['step-new-2']?.cost || 0;
-    if (s['step-1']?.value === 'redesign') (s['step-redesign-3'] as Choice[]).forEach((f) => (total += f.cost || 0));
-    (s['step-features'] as Choice[])?.forEach?.((f) => (total += f.cost || 0));
+    if (s['step-1']?.value === 'redesign') s['step-redesign-3'].forEach((f) => (total += f.cost || 0));
+    s['step-features'].forEach((f) => (total += f.cost || 0));
     if (s['step-ecomm']?.cost) total += s['step-ecomm'].cost;
     const max = Math.round(total * 1.35);
     return { min: total, max };
@@ -168,17 +218,33 @@ export default function QuoteForm() {
     setExplanation('');
     try {
       const { min, max } = estimateRange();
-      const summary = Object.values(selections)
-        .filter(Boolean)
-        .map((val) => (typeof val === 'object' && 'text' in val ? val.text : ''))
-        .join('; ');
+
+      const parts: string[] = [];
+      const push = (label: string, c: Choice | null | undefined) => c && parts.push(`${label}: ${c.text}`);
+      push('Project', selections['step-1']);
+      push('Pages', selections['step-new-2']);
+      if (selections['step-redesign-3'].length) {
+        parts.push(`Goals: ${selections['step-redesign-3'].map((g) => g.text).join(', ')}`);
+      }
+      push('Inquiry', selections['step-other-2']);
+      push('SEO', selections['step-other-seo']);
+      push('Ads', selections['step-other-ads']);
+      push('AI', selections['step-other-ai']);
+      if (selections['step-features'].length) {
+        parts.push(`Features: ${selections['step-features'].map((f) => f.text).join(', ')}`);
+      }
+      push('Products', selections['step-ecomm']);
+      push('Timeline', selections['step-timeline']);
+
+      const summary = parts.join('; ');
+
       const res = await fetch('/api/quote/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ summary, min, max }),
       });
       if (!res.ok) throw new Error('Explain API failed');
-      const data = await res.json();
+      const data: { text?: string } = await res.json();
       setExplanation(data.text || 'This estimate reflects the scope and the value these features deliver.');
     } catch {
       setExplanation('There was an issue generating the explanation, but the range reflects complexity and value.');
@@ -206,7 +272,7 @@ export default function QuoteForm() {
             <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
           </div>
 
-          {/* Example step: project type */}
+          {/* Step: project type */}
           {currentStep === 'step-1' && (
             <div className="space-y-4">
               <p className="text-gray-300">What type of project is this?</p>
@@ -235,7 +301,7 @@ export default function QuoteForm() {
             </div>
           )}
 
-          {/* Lead capture step */}
+          {/* Step: lead capture */}
           {currentStep === 'step-lead-capture' && (
             <form onSubmit={submitLead} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
@@ -248,11 +314,13 @@ export default function QuoteForm() {
                   <input name="email" type="email" className="form-input w-full rounded-md px-3 py-2" required />
                 </div>
               </div>
-              <button className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg">Continue</button>
+              <button className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg">
+                Continue
+              </button>
             </form>
           )}
 
-          {/* Estimate step */}
+          {/* Step: estimate */}
           {currentStep === 'step-estimate' && (
             <div className="space-y-4">
               <h3 className="text-white font-semibold">Estimated Range</h3>
@@ -275,7 +343,7 @@ export default function QuoteForm() {
             </div>
           )}
 
-          {/* Nav */}
+          {/* Wizard nav */}
           <div className="flex items-center justify-between pt-6">
             <button
               type="button"
