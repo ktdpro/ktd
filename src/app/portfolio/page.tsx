@@ -14,7 +14,7 @@ export default function PortfolioPage() {
     <>
       <Header />
       <main id="main-content">
-        <section className="pt-32 pb-20 bg-light-bg border-y border-gray-800">
+        <section className="pt-32 pb-20 bg-gradient-to-b from-[--color-light-bg] to-[--color-dark-bg] border-y border-gray-800">
           <div className="mx-auto max-w-6xl px-6">
             <h1 className="text-4xl font-extrabold text-white mb-8">Portfolio</h1>
             <Work />

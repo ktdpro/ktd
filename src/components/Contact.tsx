@@ -3,7 +3,10 @@ import QuoteForm from "@/components/QuoteForm";
 
 export default function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-20">
+    <section
+      id="contact"
+      className="scroll-mt-24 py-20 bg-gradient-to-br from-dark-bg to-brand-blue-600/10"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center mb-6">
           <div className="text-xs tracking-widest uppercase text-gray-400/80">Get an Instant Estimate</div>

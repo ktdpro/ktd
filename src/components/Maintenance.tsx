@@ -14,7 +14,10 @@ const plans = [
 
 export default function Maintenance() {
   return (
-    <section id="maintenance" className="scroll-mt-24 py-20 bg-light-bg border-y border-gray-800">
+    <section
+      id="maintenance"
+      className="scroll-mt-24 py-20 bg-gradient-to-br from-light-bg to-dark-bg border-y border-gray-800"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center mb-6">
           <div className="text-xs tracking-widest uppercase text-gray-400/80">Ongoing Support</div>

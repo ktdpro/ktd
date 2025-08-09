@@ -15,7 +15,7 @@ export default function TruckingWebsiteDesignPage() {
     <>
       <Header />
       <main id="main-content">
-        <section className="pt-32 pb-16">
+        <section className="pt-32 pb-16 bg-gradient-to-b from-[--color-light-bg] to-transparent">
           <div className="mx-auto max-w-6xl px-6">
             <h1 className="text-4xl font-extrabold text-white mb-4">Trucking Website Design</h1>
             <p className="text-gray-300 max-w-3xl mb-8">
@@ -49,7 +49,7 @@ export default function TruckingWebsiteDesignPage() {
         </section>
 
         {/* Show work grid under a light band for contrast */}
-        <section className="py-16 bg-light-bg border-y border-gray-800">
+        <section className="py-16 bg-gradient-to-b from-[--color-light-bg] to-[--color-dark-bg] border-y border-gray-800">
           <div className="mx-auto max-w-6xl px-6">
             <h2 className="text-2xl font-bold text-white mb-6">Recent Logistics & Service Work</h2>
             <Work />

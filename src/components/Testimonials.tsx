@@ -23,7 +23,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section id="testimonials" className="scroll-mt-24 py-16 bg-light-bg border-y border-gray-800">
+    <section id="testimonials" className="scroll-mt-24 py-16 bg-gradient-to-b from-[--color-light-bg] to-[--color-dark-bg] border-y border-gray-800">
       <div className="mx-auto max-w-6xl px-6" ref={sectionRef}>
         <div className="text-center mb-6">
           <div className="text-xs tracking-widest uppercase text-gray-400/80">Trusted By Mid‑Michigan Businesses</div>
