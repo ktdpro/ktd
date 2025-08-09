@@ -61,19 +61,31 @@ export default function Header() {
               <div
                 ref={industriesMenuRef}
                 role="menu"
-                className="absolute right-0 mt-2 w-64 rounded-lg border border-gray-700 bg-light-bg shadow-lg overflow-hidden"
+                className="absolute right-0 mt-4 w-64 rounded-lg border border-gray-700 bg-light-bg shadow-lg overflow-hidden"
               >
                 <Link
                   href="/trucking-website-design"
-                  className="block px-4 py-3 text-gray-200 hover:bg-gray-700/50"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
                   role="menuitem"
                   onClick={() => setOpenIndustries(false)}
                 >
                   Trucking Websites
                 </Link>
                 {/* Future items:
-                <Link href="/manufacturing-website-design" className="block px-4 py-3 text-gray-200 hover:bg-gray-700/50" role="menuitem">Manufacturing</Link>
-                <Link href="/agriculture-website-design" className="block px-4 py-3 text-gray-200 hover:bg-gray-700/50" role="menuitem">Agriculture</Link>
+                <Link
+                  href="/manufacturing-website-design"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
+                  role="menuitem"
+                >
+                  Manufacturing
+                </Link>
+                <Link
+                  href="/agriculture-website-design"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
+                  role="menuitem"
+                >
+                  Agriculture
+                </Link>
                 */}
               </div>
             )}
