@@ -8,6 +8,7 @@ import Work from "@/components/Work";
 import Pricing from "@/components/Pricing";
 import Maintenance from "@/components/Maintenance";
 import About from "@/components/About";
+import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Schedule from "@/components/Schedule";
 
@@ -23,6 +24,7 @@ export default function Page() {
         <Pricing />
         <Maintenance />
         <About />
+        <Faq />
         <Contact />
         <Schedule />
       </main>

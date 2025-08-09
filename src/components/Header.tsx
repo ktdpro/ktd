@@ -4,27 +4,27 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Header() {
   const [openMobile, setOpenMobile] = useState(false);
-  const [openIndustries, setOpenIndustries] = useState(false);
-  const industriesBtnRef = useRef<HTMLButtonElement | null>(null);
-  const industriesMenuRef = useRef<HTMLDivElement | null>(null);
+  const [openServices, setOpenServices] = useState(false);
+  const servicesBtnRef = useRef<HTMLButtonElement | null>(null);
+  const servicesMenuRef = useRef<HTMLDivElement | null>(null);
 
-  // close industries dropdown on outside click (desktop)
+  // close services dropdown on outside click (desktop)
   useEffect(() => {
     function onClick(e: MouseEvent) {
-      if (!openIndustries) return;
+      if (!openServices) return;
       const t = e.target as Node;
       if (
-        industriesBtnRef.current &&
-        industriesMenuRef.current &&
-        !industriesBtnRef.current.contains(t) &&
-        !industriesMenuRef.current.contains(t)
+        servicesBtnRef.current &&
+        servicesMenuRef.current &&
+        !servicesBtnRef.current.contains(t) &&
+        !servicesMenuRef.current.contains(t)
       ) {
-        setOpenIndustries(false);
+        setOpenServices(false);
       }
     }
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
-  }, [openIndustries]);
+  }, [openServices]);
 
   return (
     <header className="bg-dark-bg/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-gray-700">
@@ -36,68 +36,65 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/#services" className="text-gray-300 hover:text-brand-blue-500">Services</Link>
-          <Link href="/portfolio" className="text-gray-300 hover:text-brand-blue-500">Portfolio</Link>
-
-          {/* Industries dropdown */}
           <div className="relative">
             <button
-              ref={industriesBtnRef}
+              ref={servicesBtnRef}
               type="button"
               className="text-gray-300 hover:text-brand-blue-500 inline-flex items-center gap-1"
               aria-haspopup="menu"
-              aria-expanded={openIndustries}
-              onClick={() => setOpenIndustries((v) => !v)}
+              aria-expanded={openServices}
+              onClick={() => setOpenServices((v) => !v)}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') setOpenIndustries(false);
+                if (e.key === 'Escape') setOpenServices(false);
               }}
             >
-              Industries
-              <svg className={`w-4 h-4 transition-transform ${openIndustries ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 1 1 .94 1.17l-4.24 3.36a.75.75 0 0 1-.94 0L5.21 8.4a.75.75 0 0 1 .02-1.19Z"/>
+              Services
+              <svg className={`w-4 h-4 transition-transform ${openServices ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 1 1 .94 1.17l-4.24 3.36a.75.75 0 0 1-.94 0L5.21 8.4a.75.75 0 0 1 .02-1.19Z" />
               </svg>
             </button>
-            {openIndustries && (
+            {openServices && (
               <div
-                ref={industriesMenuRef}
+                ref={servicesMenuRef}
                 role="menu"
                 className="absolute right-0 mt-4 w-64 rounded-lg border border-gray-700 bg-light-bg shadow-lg overflow-hidden"
               >
                 <Link
-                  href="/trucking-website-design"
+                  href="/#services"
                   className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
                   role="menuitem"
-                  onClick={() => setOpenIndustries(false)}
+                  onClick={() => setOpenServices(false)}
                 >
-                  Trucking Websites
-                </Link>
-                {/* Future items:
-                <Link
-                  href="/manufacturing-website-design"
-                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
-                  role="menuitem"
-                >
-                  Manufacturing
+                  All Services
                 </Link>
                 <Link
-                  href="/agriculture-website-design"
+                  href="/local-seo-design"
                   className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50"
                   role="menuitem"
+                  onClick={() => setOpenServices(false)}
                 >
-                  Agriculture
+                  Local SEO Design
                 </Link>
-                */}
               </div>
             )}
           </div>
-
-          <Link href="/pricing" className="text-gray-300 hover:text-brand-blue-500">Pricing</Link>
-          <Link href="/about" className="text-gray-300 hover:text-brand-blue-500">About</Link>
+          <Link href="/portfolio" className="text-gray-300 hover:text-brand-blue-500">
+            Portfolio
+          </Link>
+          <Link href="/pricing" className="text-gray-300 hover:text-brand-blue-500">
+            Pricing
+          </Link>
+          <Link href="/blog" className="text-gray-300 hover:text-brand-blue-500">
+            Blog
+          </Link>
+          <Link href="/#contact" className="text-gray-300 hover:text-brand-blue-500">
+            Contact
+          </Link>
           <Link
-            href="/website-quote"
+            href="/#contact"
             className="bg-brand-blue-500 text-white px-5 py-2 rounded-lg hover:bg-brand-blue-600 shadow-md"
           >
-            Get an Estimate
+            Get a Free Audit
           </Link>
         </nav>
 
@@ -116,21 +113,56 @@ export default function Header() {
       {/* Mobile nav */}
       {openMobile && (
         <div className="md:hidden bg-dark-bg border-t border-gray-700">
-          <Link href="/#services" className="block py-3 px-6 text-gray-300 hover:bg-light-bg" onClick={() => setOpenMobile(false)}>Services</Link>
-          <Link href="/portfolio" className="block py-3 px-6 text-gray-300 hover:bg-light-bg" onClick={() => setOpenMobile(false)}>Portfolio</Link>
-
-          {/* Mobile sub-menu (simple indented links) */}
+          <Link
+            href="/#services"
+            className="block py-3 px-6 text-gray-300 hover:bg-light-bg"
+            onClick={() => setOpenMobile(false)}
+          >
+            Services
+          </Link>
           <div className="py-2">
-            <div className="px-6 text-gray-400 text-sm uppercase tracking-wide">Industries</div>
-            <Link href="/trucking-website-design" className="block py-2 pl-10 pr-6 text-gray-300 hover:bg-light-bg" onClick={() => setOpenMobile(false)}>
-              Trucking Websites
+            <Link
+              href="/local-seo-design"
+              className="block py-2 pl-10 pr-6 text-gray-300 hover:bg-light-bg"
+              onClick={() => setOpenMobile(false)}
+            >
+              Local SEO Design
             </Link>
           </div>
-
-          <Link href="/pricing" className="block py-3 px-6 text-gray-300 hover:bg-light-bg" onClick={() => setOpenMobile(false)}>Pricing</Link>
-          <Link href="/about" className="block py-3 px-6 text-gray-300 hover:bg-light-bg" onClick={() => setOpenMobile(false)}>About</Link>
-          <Link href="/website-quote" className="block py-3 px-6 text-gray-100 bg-brand-blue-600 hover:bg-brand-blue-500" onClick={() => setOpenMobile(false)}>
-            Get an Estimate
+          <Link
+            href="/portfolio"
+            className="block py-3 px-6 text-gray-300 hover:bg-light-bg"
+            onClick={() => setOpenMobile(false)}
+          >
+            Portfolio
+          </Link>
+          <Link
+            href="/pricing"
+            className="block py-3 px-6 text-gray-300 hover:bg-light-bg"
+            onClick={() => setOpenMobile(false)}
+          >
+            Pricing
+          </Link>
+          <Link
+            href="/blog"
+            className="block py-3 px-6 text-gray-300 hover:bg-light-bg"
+            onClick={() => setOpenMobile(false)}
+          >
+            Blog
+          </Link>
+          <Link
+            href="/#contact"
+            className="block py-3 px-6 text-gray-300 hover:bg-light-bg"
+            onClick={() => setOpenMobile(false)}
+          >
+            Contact
+          </Link>
+          <Link
+            href="/#contact"
+            className="block py-3 px-6 text-gray-100 bg-brand-blue-600 hover:bg-brand-blue-500"
+            onClick={() => setOpenMobile(false)}
+          >
+            Get a Free Audit
           </Link>
         </div>
       )}
