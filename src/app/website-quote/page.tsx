@@ -20,9 +20,7 @@ export default function WebsiteQuotePage() {
             <p className="text-gray-300 mb-8">
               I’ll follow up with options, timelines, and a clear price. No pressure.
             </p>
-            <div className="max-w-2xl mx-auto bg-light-bg border border-gray-700 p-8 rounded-xl">
-              <QuoteForm />
-            </div>
+            <QuoteForm />
           </div>
         </section>
       </main>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 type StepId =
   | 'step-1'
@@ -37,44 +37,6 @@ type Selections = {
   'step-final': null;
 };
 
-const Section: React.FC<{ id?: string; className?: string; children: React.ReactNode }> = ({
-  id,
-  className = '',
-  children,
-}) => {
-  const ref = useRef<HTMLElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          obs.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.12 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <section
-      id={id}
-      ref={ref}
-      className={[
-        'py-20 lg:py-28 transition-opacity transition-transform duration-700 ease-out will-change-transform',
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5',
-        className,
-      ].join(' ')}
-    >
-      {children}
-    </section>
-  );
-};
 
 export default function QuoteForm() {
   const [currentStep, setCurrentStep] = useState<StepId>('step-1');
@@ -141,7 +103,11 @@ export default function QuoteForm() {
     const seq = stepSequence();
     const idx = seq.indexOf(currentStep);
     const nextIdx = idx + direction;
-    if (nextIdx >= 0 && nextIdx < seq.length && isStepComplete(currentStep)) {
+    if (
+      nextIdx >= 0 &&
+      nextIdx < seq.length &&
+      (direction === -1 || isStepComplete(currentStep))
+    ) {
       setCurrentStep(seq[nextIdx]);
     }
   };
@@ -275,7 +241,7 @@ export default function QuoteForm() {
       type="button"
       onClick={() => pick(step, option, { checkbox })}
       className={[
-        'option-card rounded-lg px-4 py-3 text-sm flex items-center',
+        'option-card rounded-lg px-4 py-3 text-sm flex items-center text-gray-200',
         selected ? 'selected' : '',
       ].join(' ')}
     >
@@ -291,7 +257,7 @@ export default function QuoteForm() {
       case 'step-1':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What type of project is this?</p>
+            <p className="text-gray-100">What type of project is this?</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { value: 'new', text: 'New Website', cost: 0 },
@@ -311,7 +277,7 @@ export default function QuoteForm() {
       case 'step-new-2':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">Roughly how many pages will you need?</p>
+            <p className="text-gray-100">Roughly how many pages will you need?</p>
             <div className="grid grid-cols-1 gap-3">
               {[
                 { value: '1-3', text: 'Starter (1-3 pages)', cost: 1500 },
@@ -331,7 +297,7 @@ export default function QuoteForm() {
       case 'step-redesign-2':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What is your current website URL?</p>
+            <p className="text-gray-100">What is your current website URL?</p>
             <input
               type="url"
               value={selections['step-redesign-2'].url}
@@ -346,7 +312,7 @@ export default function QuoteForm() {
       case 'step-redesign-3':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What are your main goals for the redesign?</p>
+            <p className="text-gray-100">What are your main goals for the redesign?</p>
             <div className="grid grid-cols-1 gap-3">
               {[
                 { value: 'modern', text: 'Modernize the Design', cost: 1000 },
@@ -367,7 +333,7 @@ export default function QuoteForm() {
       case 'step-other-2':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">How can I help you?</p>
+            <p className="text-gray-100">How can I help you?</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { value: 'seo', text: 'SEO Services' },
@@ -387,7 +353,7 @@ export default function QuoteForm() {
       case 'step-other-seo':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What is your main SEO goal?</p>
+            <p className="text-gray-100">What is your main SEO goal?</p>
             <OptionCard
               step="step-other-seo"
               option={{ value: 'local-traffic', text: 'Increase local traffic' }}
@@ -398,7 +364,7 @@ export default function QuoteForm() {
       case 'step-other-ads':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What is your estimated monthly budget?</p>
+            <p className="text-gray-100">What is your estimated monthly budget?</p>
             <OptionCard
               step="step-other-ads"
               option={{ value: 'under-1k', text: 'Under $1,000/mo' }}
@@ -409,7 +375,7 @@ export default function QuoteForm() {
       case 'step-other-ai':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">What would you like to automate?</p>
+            <p className="text-gray-100">What would you like to automate?</p>
             <OptionCard
               step="step-other-ai"
               option={{ value: 'support', text: 'Customer Support' }}
@@ -420,7 +386,7 @@ export default function QuoteForm() {
       case 'step-features':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">Any additional features? (Optional)</p>
+            <p className="text-gray-100">Any additional features? (Optional)</p>
             <div className="grid grid-cols-1 gap-3">
               {[
                 { value: 'ecommerce', text: 'eCommerce / Online Store', cost: 2000 },
@@ -441,7 +407,7 @@ export default function QuoteForm() {
       case 'step-ecomm':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">How many products will you sell?</p>
+            <p className="text-gray-100">How many products will you sell?</p>
             <div className="grid grid-cols-1 gap-3">
               {[
                 { value: '1-10', text: 'Starter Store (1-10 Products)', cost: 500 },
@@ -464,7 +430,7 @@ export default function QuoteForm() {
           <form onSubmit={submitLead} className="space-y-4">
             {isOther && (
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Message</label>
+                <label className="block text-sm text-gray-100 mb-1">Message</label>
                 <textarea
                   name="message"
                   rows={3}
@@ -475,11 +441,11 @@ export default function QuoteForm() {
             )}
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Name *</label>
+                <label className="block text-sm text-gray-100 mb-1">Name *</label>
                 <input name="name" className="form-input w-full rounded-md px-3 py-2" required />
               </div>
               <div>
-                <label className="block text-sm text-gray-300 mb-1">Email *</label>
+                <label className="block text-sm text-gray-100 mb-1">Email *</label>
                 <input
                   name="email"
                   type="email"
@@ -500,7 +466,7 @@ export default function QuoteForm() {
           <div className="space-y-4 text-center">
             <div className="p-4 border border-gray-600 rounded-lg text-left">
               <h4 className="text-white font-semibold mb-2">Your Project Outline:</h4>
-              <ul className="list-disc list-inside text-gray-300 space-y-1">
+              <ul className="list-disc list-inside text-gray-100 space-y-1">
                 {buildSummary().map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -516,7 +482,7 @@ export default function QuoteForm() {
             >
               {explaining ? 'Explaining…' : 'Why this price?'}
             </button>
-            {explanation && <p className="text-gray-300 text-sm">{explanation}</p>}
+            {explanation && <p className="text-gray-100 text-sm">{explanation}</p>}
             <div className="flex flex-col md:flex-row gap-4 pt-4">
               <button
                 type="button"
@@ -539,7 +505,7 @@ export default function QuoteForm() {
       case 'step-timeline':
         return (
           <div className="space-y-4">
-            <p className="text-gray-300">Great! How soon would you like to start?</p>
+            <p className="text-gray-100">Great! How soon would you like to start?</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 { value: 'now', text: 'Immediately' },
@@ -577,43 +543,33 @@ export default function QuoteForm() {
   };
 
   return (
-    <Section id="quote" className="bg-brand-blue-600/10">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">Get an Instant Estimate</h2>
-          <p className="text-lg text-blue-200 mt-2 max-w-2xl mx-auto">
-            Answer a few questions to get a real-time price range for your project.
-          </p>
-        </div>
-        <div className="max-w-2xl mx-auto bg-light-bg border border-gray-700 p-6 md:p-8 rounded-xl shadow-2xl">
-          <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
-            <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
-          </div>
-
-          {renderStep()}
-
-          {!['step-estimate', 'step-final'].includes(currentStep) && (
-            <div className="flex items-center justify-between pt-6">
-              <button
-                type="button"
-                onClick={() => go(-1)}
-                className="text-sm text-gray-400 hover:text-white"
-                disabled={seq.indexOf(currentStep) <= 0}
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                onClick={() => go(1)}
-                className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
-                disabled={!isStepComplete(currentStep)}
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </div>
+    <div className="max-w-3xl mx-auto bg-light-bg border border-gray-700 p-6 md:p-8 rounded-xl shadow-2xl">
+      <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
+        <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
       </div>
-    </Section>
+
+      {renderStep()}
+
+      {!['step-estimate', 'step-final'].includes(currentStep) && (
+        <div className="flex items-center justify-between pt-6">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            className="text-sm text-gray-400 hover:text-white disabled:opacity-40"
+            disabled={seq.indexOf(currentStep) <= 0}
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
+            disabled={!isStepComplete(currentStep)}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

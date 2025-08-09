@@ -12,10 +12,8 @@ export default function Contact() {
           Answer a few questions to get a ballpark price
         </h2>
 
-        {/* centered calculator card */}
-        <div className="max-w-2xl mx-auto bg-light-bg border border-gray-700 p-8 rounded-xl">
-          <QuoteForm />
-        </div>
+        {/* quote form */}
+        <QuoteForm />
       </div>
     </section>
   );
