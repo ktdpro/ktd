@@ -14,7 +14,7 @@ export default function TruckingWebsiteDesignPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <section className="pt-32 pb-16">
           <div className="mx-auto max-w-6xl px-6">
             <h1 className="text-4xl font-extrabold text-white mb-4">Trucking Website Design</h1>
