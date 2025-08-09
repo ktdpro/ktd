@@ -28,9 +28,11 @@ export default function AboutPage() {
         <section className="pb-20">
           <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-start">
             {/* Image / Headshot */}
-            <div className="rounded-xl bg-brand-blue-600/15 border border-gray-700 aspect-[16/10] md:aspect-[4/3] grid place-items-center text-white/70">
-              {/* Replace with an <img/> when you have a headshot or workspace photo */}
-              Your Photo / Workspace
+            <div className="rounded-xl p-[1px] bg-gradient-to-r from-brand-blue-500 to-brand-blue-700">
+              <div className="rounded-[inherit] bg-brand-blue-600/15 border border-gray-700 aspect-[16/10] md:aspect-[4/3] grid place-items-center text-white/70">
+                {/* Replace with an <img/> when you have a headshot or workspace photo */}
+                Your Photo / Workspace
+              </div>
             </div>
 
             {/* Copy */}
@@ -95,7 +97,7 @@ export default function AboutPage() {
         </section>
 
         {/* Education / Training (light band) */}
-        <section className="py-16 bg-light-bg border-y border-gray-800">
+        <section className="py-16 bg-gradient-to-b from-[--color-light-bg] to-[--color-dark-bg] border-y border-gray-800">
           <div className="mx-auto max-w-6xl px-6">
             <h2 className="text-2xl font-bold text-white mb-8">Professional Education & Training</h2>
 

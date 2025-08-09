@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section id="hero" className="pt-32 pb-20 md:pt-48 md:pb-32 text-center">
+    <section id="hero" className="pt-32 pb-20 md:pt-48 md:pb-32 text-center bg-gradient-to-b from-[--color-light-bg] to-transparent">
       <div className="mx-auto max-w-6xl px-6">
         <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
           Expert <span className="bg-gradient-to-r from-brand-blue-500 to-blue-400 bg-clip-text text-transparent">Web Design</span><br />

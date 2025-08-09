@@ -14,7 +14,7 @@ export default function ContactPage() {
     <>
       <Header />
       <main id="main-content">
-        <section className="pt-32 pb-20">
+        <section className="pt-32 pb-20 bg-gradient-to-b from-[--color-light-bg] to-[--color-dark-bg]">
           <div className="mx-auto max-w-6xl px-6">
             <h1 className="text-4xl font-extrabold text-white mb-8">Contact</h1>
             <QuoteForm />
