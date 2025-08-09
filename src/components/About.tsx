@@ -1,6 +1,9 @@
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-20">
+    <section
+      id="about"
+      className="scroll-mt-24 py-20 bg-gradient-to-br from-brand-blue-600/20 to-light-bg"
+    >
       <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-start">
         <div className="rounded-xl bg-brand-blue-600/60 aspect-[16/10] md:aspect-[4/3] grid place-items-center text-white/70">
           Your Photo

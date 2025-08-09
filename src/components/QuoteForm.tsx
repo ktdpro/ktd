@@ -543,33 +543,35 @@ export default function QuoteForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-light-bg border border-gray-700 p-6 md:p-8 rounded-xl shadow-2xl">
-      <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
-        <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
-      </div>
-
-      {renderStep()}
-
-      {!['step-estimate', 'step-final'].includes(currentStep) && (
-        <div className="flex items-center justify-between pt-6">
-          <button
-            type="button"
-            onClick={() => go(-1)}
-            className="text-sm text-gray-400 hover:text-white disabled:opacity-40"
-            disabled={seq.indexOf(currentStep) <= 0}
-          >
-            Back
-          </button>
-          <button
-            type="button"
-            onClick={() => go(1)}
-            className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
-            disabled={!isStepComplete(currentStep)}
-          >
-            Next
-          </button>
+    <div className="max-w-3xl mx-auto p-[1px] rounded-xl bg-gradient-to-br from-brand-blue-600 to-brand-blue-500 shadow-2xl">
+      <div className="bg-light-bg p-6 md:p-8 rounded-xl">
+        <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
+          <div className="h-full bg-brand-blue-500" style={{ width: `${progressPct}%` }} />
         </div>
-      )}
+
+        {renderStep()}
+
+        {!['step-estimate', 'step-final'].includes(currentStep) && (
+          <div className="flex items-center justify-between pt-6">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              className="text-sm text-gray-400 hover:text-white disabled:opacity-40"
+              disabled={seq.indexOf(currentStep) <= 0}
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              className="bg-brand-blue-500 hover:bg-brand-blue-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
+              disabled={!isStepComplete(currentStep)}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
